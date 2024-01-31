@@ -14,3 +14,11 @@ class Github:
                          params={'q': name})
         body = r.json()
         return body
+
+    # Індивідуальна частина
+    def get_emojis(self):
+        return requests.get('https://api.github.com/emojis').json()
+
+    def get_commits(self, owner, repo):
+        r = requests.get(f'https://api.github.com/repos/{owner}/{repo}/commits')
+        return r.json()
