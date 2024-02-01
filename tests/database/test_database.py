@@ -1,5 +1,7 @@
 import pytest
 from modules.common.database import Database
+from sqlite3 import OperationalError
+from datetime import datetime, timedelta
 
 
 @pytest.mark.database
@@ -68,3 +70,65 @@ def test_detailed_orders():
     assert orders[0][1] == 'Sergii'
     assert orders[0][2] == 'солодка вода'
     assert orders[0][3] == 'з цукром'
+
+
+# Індивідуальна частина
+@pytest.mark.database
+def test_detailed_orders_by_name(db):
+    name = 'Sergii'
+    orders = db.get_detailed_orders_by_name(name)
+    assert orders[0][0] == 1
+    assert orders[0][1] == 'Sergii'
+
+
+@pytest.mark.database
+def test_insert_invalid_product(db):
+    products_start_len = len(db.get_all_products())
+    try:
+        db.insert_product(5, 'печиво', 'солоне', 'invalid_count')
+    except OperationalError as err:
+        print('Не записано!')
+    products_end_len = len(db.get_all_products())
+
+    assert products_start_len == products_end_len
+
+
+@pytest.mark.database
+def test_last_order_is_not_earlier_than_one_year(updated_orders):
+    orders = updated_orders.get_detailed_orders()
+    last_order_date = datetime.strptime(orders[-1][-1], "%Y-%m-%d %H:%M:%S")
+    current_date = datetime.now()
+    difference = current_date - last_order_date
+    one_year = timedelta(days=365)
+    assert difference < one_year
+
+
+@pytest.mark.database
+def test_update_order_date_by_id(db):
+    current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db.update_order_date_by_id(1, current_date)
+    date = db.get_detailed_orders()[0][4]
+    assert date == current_date
+
+
+@pytest.mark.database
+def test_avg_quantity_more_than_10(db):
+    avg_qnt = db.get_average_quantity_from_products()[0][0]
+    assert avg_qnt > 10
+
+
+@pytest.mark.database
+def test_insert_multiple_products(updated_products):
+    assert len(updated_products.get_all_products()) > 4
+
+
+@pytest.mark.database
+def test_sort_products_by_description(updated_products):
+    products = updated_products.sort_products_by_description_length()
+    assert len(products[0][1]) > len(products[-1][1])
+
+
+@pytest.mark.database
+def test_sort_products_by_quantity(updated_products):
+    products = updated_products.sort_products_by_quantity()
+    assert products[0][1] > products[-1][1]
