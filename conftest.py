@@ -1,6 +1,7 @@
 import pytest
 from modules.api.clients.github import Github
 from modules.common.database import Database
+from modules.ui.page_objects.protonmail_pages import SignInNewProtonmail
 
 
 class User:
@@ -59,3 +60,10 @@ def updated_products():
     yield db
 
     db.delete_new_products()
+
+
+@pytest.fixture
+def protonmail():
+    ui = SignInNewProtonmail()
+    yield ui
+    ui.close()
