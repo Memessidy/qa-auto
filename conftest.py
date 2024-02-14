@@ -1,6 +1,7 @@
 import pytest
 from modules.api.clients.github import Github
 from modules.common.database import Database
+from modules.ui.page_objects.amazon_page import AmazonPage
 from modules.ui.page_objects.protonmail_pages import SignInNewProtonmail
 
 
@@ -65,5 +66,13 @@ def updated_products():
 @pytest.fixture
 def protonmail():
     ui = SignInNewProtonmail()
+    yield ui
+    ui.close()
+
+
+@pytest.fixture
+def amazon():
+    ui = AmazonPage()
+    ui.go_to()
     yield ui
     ui.close()

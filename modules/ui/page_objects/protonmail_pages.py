@@ -1,15 +1,8 @@
 from modules.ui.page_objects.base_page import BasePage
 from selenium.webdriver.common.by import By
+from modules.ui.page_objects.xpath_pathes import custom_xpath
 
 proton_accounts = [{'alreadyeci@proton.me': 'k`JUypT8;>K'}]
-
-# TODO Необхідний аттрибут зміг знайти тільки по такому складному XPATH, так як 1 символ там постійно змінюється
-custom_xpath = ("//*[starts-with(@aria-label, '1') or starts-with(@aria-label, '2')"
-                " or starts-with(@aria-label, '3') or starts-with(@aria-label, '4')"
-                " or starts-with(@aria-label, '5') or starts-with(@aria-label, '6') "
-                "or starts-with(@aria-label, '7') or starts-with(@aria-label, '8') "
-                "or starts-with(@aria-label, '9')]/descendant-or-self::*[contains(@aria-label, "
-                "'unread conversations')]")
 
 
 class SignInNewProtonmail(BasePage):
@@ -84,10 +77,3 @@ class SignInNewProtonmail(BasePage):
         self.select_all_messages()
         read_btn = self.search_element(By.XPATH, "//button[@data-testid='toolbar:read']")
         read_btn.click()
-
-# if __name__ == '__main__':
-#     ui = SignInNewProtonmail()
-#     ui.login_to_protonmail()
-#     print(ui.get_unread_messages())
-#     ui.delete_all_messages()
-#     print(ui.get_unread_messages())
