@@ -71,6 +71,14 @@ def protonmail():
 
 
 @pytest.fixture
+def protonmail_with_login():
+    ui = SignInNewProtonmail()
+    ui.login_to_protonmail()
+    yield ui
+    ui.close()
+
+
+@pytest.fixture
 def amazon():
     ui = AmazonPage()
     ui.go_to()

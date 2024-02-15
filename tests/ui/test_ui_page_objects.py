@@ -34,25 +34,22 @@ def test_is_new_protonmail(protonmail):
 
 
 @pytest.mark.ui
-def test_check_login(protonmail):
-    protonmail.login_to_protonmail()
-    assert protonmail.check_success_login()
+def test_check_login(protonmail_with_login):
+    assert protonmail_with_login.check_success_login()
 
 
 @pytest.mark.ui
-def test_new_messages(protonmail):
-    protonmail.login_to_protonmail()
-    assert protonmail.get_unread_messages() > 0
+def test_new_messages(protonmail_with_login):
+    assert protonmail_with_login.get_unread_messages() > 0
 
 
 @pytest.mark.ui
-def test_delete_messages(protonmail):
-    protonmail.login_to_protonmail()
+def test_delete_messages(protonmail_with_login):
     time.sleep(5)  # TODO  Тут sleep, просто цей самий тест без нього інколи не працює
-    messages_count = protonmail.get_unread_messages()
+    messages_count = protonmail_with_login.get_unread_messages()
     print(f'Кількість повідомлень: {messages_count}')
-    protonmail.delete_all_messages()
-    messages_count = protonmail.get_unread_messages()
+    protonmail_with_login.delete_all_messages()
+    messages_count = protonmail_with_login.get_unread_messages()
     print(f'Повідомлення були видалені. Кількість повідомлень зараз: {messages_count}')
     assert messages_count == 0
 
