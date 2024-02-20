@@ -3,6 +3,7 @@ from modules.api.clients.github import Github
 from modules.common.database import Database
 from modules.ui.page_objects.amazon_page import AmazonPage
 from modules.ui.page_objects.protonmail_pages import SignInNewProtonmail
+from modules.ui.page_objects.rozetka_page import RozetkaPage
 
 
 class User:
@@ -64,5 +65,21 @@ def protonmail():
 def amazon():
     ui = AmazonPage()
     ui.go_to()
+    yield ui
+    ui.close()
+
+
+@pytest.fixture(scope='module')
+def rozetka():
+    ui = RozetkaPage()
+    ui.go_to()
+    yield ui
+    ui.close()
+
+
+@pytest.fixture
+def rozetka_with_one_product():
+    ui = RozetkaPage()
+    ui.add_new_product_to_cart('iPhone 15')
     yield ui
     ui.close()
