@@ -36,7 +36,7 @@ def github_api():
     yield api
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def db():
     db = Database()
     yield db
@@ -51,16 +51,6 @@ def updated_orders():
     yield db
 
     db.delete_order_by_id(2)
-
-
-@pytest.fixture
-def updated_products():
-    db = Database()
-    db.insert_multiple_products()
-
-    yield db
-
-    db.delete_new_products()
 
 
 @pytest.fixture(scope='module')

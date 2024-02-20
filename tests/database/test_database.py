@@ -118,17 +118,27 @@ def test_avg_quantity_more_than_10(db):
 
 
 @pytest.mark.database
-def test_insert_multiple_products(updated_products):
-    assert len(updated_products.get_all_products()) > 4
+def test_insert_multiple_products(db):
+    values_to_insert_count = 10
+    products_count_before_insert = db.get_products_count()
+    db.insert_multiple_products(start=products_count_before_insert+1,
+                                count=products_count_before_insert+values_to_insert_count)
+
+    products_count_after_insert = db.get_products_count()
+    assert products_count_after_insert > products_count_before_insert
 
 
 @pytest.mark.database
-def test_sort_products_by_description(updated_products):
-    products = updated_products.sort_products_by_description_length()
+def test_sort_products_by_description(db):
+    """
+    The test checks sorting by the 'description' field.
+    It verifies if the items are sorted correctly by the length of the description.
+    """
+    products = db.sort_products_by_description_length()
     assert len(products[0][1]) > len(products[-1][1])
 
 
 @pytest.mark.database
-def test_sort_products_by_quantity(updated_products):
-    products = updated_products.sort_products_by_quantity()
+def test_sort_products_by_quantity(db):
+    products = db.sort_products_by_quantity()
     assert products[0][1] > products[-1][1]

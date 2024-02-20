@@ -1,9 +1,11 @@
 import sqlite3
+from modules.common.data_generators.product_generators import product_generator
+database_path = r'D:\qa-auto\become_qa_auto.db'
 
 
 class Database:
     def __init__(self):
-        self.connection = sqlite3.connect('become_qa_auto.db')
+        self.connection = sqlite3.connect(database_path)
         self.cursor = self.connection.cursor()
 
     def test_connection(self):
@@ -99,37 +101,20 @@ class Database:
         query = "SELECT avg(quantity) FROM products;"
         return self.return_fetched_data(query)
 
-    def insert_multiple_products(self):
-        query = """
-        INSERT INTO products (id, name, description, quantity) VALUES
-        (5, 'Печиво', 'Солодке печиво', 30),
-        (6, 'Молоко', 'Свіже коровяче молоко', 20),
-        (7, 'Хліб', 'Пшеничний хліб', 40),
-        (8, 'Яйця', 'Курячі яйця', 50),
-        (9, 'Кава', 'Арабіка, мелена', 15),
-        (10, 'Оливкова олія', 'Екстра-класу', 25),
-        (11, 'Сир', 'Гауда', 10),
-        (12, 'Сок', 'Апельсиновий сік', 35),
-        (13, 'Паста', 'Макарони', 40),
-        (14, 'Рис', 'Довгозернистий рис', 18),
-        (15, 'Яблука', 'Сорт Голден', 22),
-        (16, 'Мед', 'Натуральний квітковий мед', 28),
-        (17, 'Томати', 'Спелі помідори', 30),
-        (18, 'Картопля', 'Сорт Агата', 45),
-        (19, 'Гречка', 'Нежирна гречка', 12),
-        (20, 'Курка', 'Філе курки', 15),
-        (21, 'Капуста', 'Біла капуста', 20),
-        (22, 'Паприка', 'Червона паприка', 8),
-        (23, 'Кефір', 'без жиру', 25),
-        (24, 'Грейпфрути', 'Рожеві грейпфрути', 31);
-        """
+    def insert_multiple_products(self, start, count):
+        query = f"INSERT INTO products (id, name, description, quantity) VALUES {product_generator(start, count)};"
         self.cursor.execute(query)
         self.connection.commit()
 
-    def delete_new_products(self):
-        query = "DELETE FROM products WHERE id > 4"
+    def delete_new_products(self, max_id):
+        query = f"DELETE FROM products WHERE id > {max_id}"
         self.cursor.execute(query)
         self.connection.commit()
+
+    def get_products_count(self):
+        query = "SELECT COUNT(*) FROM 'products'"
+        self.cursor.execute(query)
+        return self.cursor.fetchone()[0]
 
     def sort_products_by_description_length(self):
         query = "SELECT name, description FROM products ORDER BY LENGTH(description) DESC"
