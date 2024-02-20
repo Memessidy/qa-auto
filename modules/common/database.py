@@ -1,5 +1,6 @@
 import sqlite3
 from modules.common.data_generators.product_generators import product_generator
+
 database_path = r'D:\qa-auto\become_qa_auto.db'
 
 
@@ -16,37 +17,28 @@ class Database:
 
     def get_all_users(self):
         query = "SELECT name, address, city FROM customers"
-        self.cursor.execute(query)
-        record = self.cursor.fetchall()
-        return record
+        return self.return_fetched_data(query)
 
     def get_user_address_by_name(self, name):
         query = f"SELECT address, city, PostalCode, country FROM customers WHERE name = '{name}'"
-        self.cursor.execute(query)
-        record = self.cursor.fetchall()
-        return record
+        return self.return_fetched_data(query)
 
     def update_product_qnt_by_id(self, product_id, qnt):
         query = f"UPDATE products SET quantity = {qnt} WHERE id = '{product_id}'"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def select_product_qnt_by_id(self, product_id):
         query = f"SELECT quantity FROM products WHERE id = {product_id}"
-        self.cursor.execute(query)
-        record = self.cursor.fetchall()
-        return record
+        return self.return_fetched_data(query)
 
     def insert_product(self, product_id, name, description, qnt):
         query = (f"INSERT OR REPLACE INTO products (id, name, description, quantity) "
                  f"VALUES ({product_id}, '{name}', '{description}', {qnt})")
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def delete_product_by_id(self, product_id):
         query = f"DELETE FROM products WHERE id == {product_id}"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def get_all_products(self):
         query = f"SELECT * FROM products"
@@ -62,10 +54,7 @@ class Database:
         JOIN products
         ON orders.product_id == products.id
         """
-
-        self.cursor.execute(query)
-        record = self.cursor.fetchall()
-        return record
+        return self.return_fetched_data(query)
 
     def get_detailed_orders_by_name(self, name):
         query = f"""
@@ -84,18 +73,15 @@ class Database:
         query = f"""
         INSERT OR REPLACE INTO orders VALUES ({order_id}, {customer_id}, {product_id}, DATETIME('now'))
         """
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def delete_order_by_id(self, id):
         query = f"DELETE FROM orders WHERE id = {id}"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def update_order_date_by_id(self, id, date):
         query = f"UPDATE orders SET order_date = '{date}' WHERE id == {id}"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def get_average_quantity_from_products(self):
         query = "SELECT avg(quantity) FROM products;"
@@ -103,13 +89,11 @@ class Database:
 
     def insert_multiple_products(self, start, count):
         query = f"INSERT INTO products (id, name, description, quantity) VALUES {product_generator(start, count)};"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def delete_new_products(self, max_id):
         query = f"DELETE FROM products WHERE id > {max_id}"
-        self.cursor.execute(query)
-        self.connection.commit()
+        self.commit_changes(query)
 
     def get_products_count(self):
         query = "SELECT COUNT(*) FROM 'products'"
@@ -128,3 +112,7 @@ class Database:
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return record
+
+    def commit_changes(self, query):
+        self.cursor.execute(query)
+        self.connection.commit()
