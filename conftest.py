@@ -63,22 +63,14 @@ def updated_products():
     db.delete_new_products()
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def protonmail():
     ui = SignInNewProtonmail()
     yield ui
     ui.close()
 
 
-@pytest.fixture
-def protonmail_with_login():
-    ui = SignInNewProtonmail()
-    ui.login_to_protonmail()
-    yield ui
-    ui.close()
-
-
-@pytest.fixture
+@pytest.fixture(scope='module')
 def amazon():
     ui = AmazonPage()
     ui.go_to()
