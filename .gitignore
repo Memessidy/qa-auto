@@ -1,3 +1,4 @@
 .idea
 .venv
 __pycache__
+become_qa_auto.db

@@ -36,7 +36,7 @@ def github_api():
     yield api
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def db():
     db = Database()
     yield db
@@ -53,32 +53,14 @@ def updated_orders():
     db.delete_order_by_id(2)
 
 
-@pytest.fixture
-def updated_products():
-    db = Database()
-    db.insert_multiple_products()
-
-    yield db
-
-    db.delete_new_products()
-
-
-@pytest.fixture
+@pytest.fixture(scope='module')
 def protonmail():
     ui = SignInNewProtonmail()
     yield ui
     ui.close()
 
 
-@pytest.fixture
-def protonmail_with_login():
-    ui = SignInNewProtonmail()
-    ui.login_to_protonmail()
-    yield ui
-    ui.close()
-
-
-@pytest.fixture
+@pytest.fixture(scope='module')
 def amazon():
     ui = AmazonPage()
     ui.go_to()

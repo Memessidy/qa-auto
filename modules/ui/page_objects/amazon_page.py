@@ -13,15 +13,15 @@ class AmazonPage(BasePage):
         self.driver.get(self.URL)
 
     def find_search_field(self):
-        search_field = self.search_element(By.ID, "twotabsearchtextbox")
-        search_button = self.search_element(By.ID, "nav-search-submit-button")
+        search_field = self.wait_for_element(By.ID, "twotabsearchtextbox")
+        search_button = self.wait_for_element(By.ID, "nav-search-submit-button")
         return search_field, search_button
 
     def find_product(self, product_name):
         field, button = self.find_search_field()
         field.send_keys(product_name)
         button.click()
-        self.search_element(By.XPATH, xpath_pathes.AMAZON_PRODUCT_XPATH).click()
+        self.wait_for_element(By.XPATH, xpath_pathes.AMAZON_PRODUCT_XPATH).click()
 
     def check_title(self, expected_title: str) -> bool:
         return self.driver.title == expected_title
@@ -31,7 +31,7 @@ class AmazonPage(BasePage):
 
     def test_buy_button(self):
         self.driver.switch_to.window(self.driver.window_handles[1])
-        btn = self.search_element(By.ID, 'buy-now-button')
+        btn = self.wait_for_element(By.ID, 'buy-now-button')
         btn.click()
 
     def check_substring_in_title(self, expected_substring: str) -> bool:

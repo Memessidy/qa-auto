@@ -13,7 +13,7 @@ class BasePage:
     def close(self) -> None:
         self.driver.close()
 
-    def search_element(self, by_what, context):
+    def wait_for_element(self, by_what, context):
         element = self.wait.until(
             EC.presence_of_element_located((by_what, context)))
         return element
