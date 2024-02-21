@@ -22,3 +22,7 @@ class Github:
     def get_commits(self, owner, repo):
         r = requests.get(f'https://api.github.com/repos/{owner}/{repo}/commits')
         return r.json()
+
+    def get_commit_by_sha(self, owner, repo, sha):
+        r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/commits/{sha}")
+        return r.json()
