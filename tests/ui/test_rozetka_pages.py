@@ -34,12 +34,14 @@ def test_delete_one_of_existing_products_from_cart(rozetka):
     assert count_in_the_cart_after < count_in_the_cart_before
 
 
+@pytest.mark.ui
 def test_add_new_product_to_cart(rozetka):
     rozetka.add_new_product_to_cart('AirPods Pro')
     # calculate all prices
     assert rozetka.find_full_price() == sum(rozetka.prices.values())
 
 
+@pytest.mark.ui
 def test_delete_product_from_cart(rozetka_with_one_product):
     rozetka_with_one_product.delete_product_from_cart()
     assert rozetka_with_one_product.check_cart_is_empty()
